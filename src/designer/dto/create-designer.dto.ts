@@ -1,1 +1,3 @@
-export class CreateDesignerDto {}
+export class CreateDesignerDto {
+    
+}

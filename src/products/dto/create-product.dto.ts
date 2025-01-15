@@ -3,7 +3,7 @@ export class CreateProductDto {
     description: string;
     price: number;
     isPaid: boolean;
-    techKeywords: string[];
+    techKeywords?: string[];
     previewLink: string;
     designerId: number;
 }
