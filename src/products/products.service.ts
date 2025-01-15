@@ -5,8 +5,8 @@ import { UpdateProductDto } from './dto/update-product.dto';
 @Injectable()
 export class ProductsService {
   private readonly products = [
-    { id: 1, name: 'Product 1', price: 100 },
-    { id: 2, name: 'Product 2', price: 200 },
+    { name: 'Product 1', price: 100 },
+    { name: 'Product 2', price: 200 },
   ];
 
   create(createProductDto: CreateProductDto) {
@@ -21,19 +21,19 @@ export class ProductsService {
       ${JSON.stringify(this.products)}`;
   }
 
-  findOne(id: number) {
-    const product = this.products.find((product) => product.id === id);
-    return `This action returns a #${id} product:
-      ${product?JSON.stringify(product):'Product not found with ID #'+id}`;
+  findOne(name: string) {
+    const product = this.products.find((product) => product.name === name);
+    return `This action returns a ${name} product:
+      ${product?JSON.stringify(product):'Product not found with NAME: '+name}`;
   }
 
-  update(id: number, updateProductDto: UpdateProductDto) {
-    // Find the index of the product with the given ID
-    const productIndex = this.products.findIndex((product) => product.id === id);
+  update(name: string, updateProductDto: UpdateProductDto) {
+    // Find the index of the product with the given NAME:
+    const productIndex = this.products.findIndex((product) => product.name === name);
   
     // Check if the product exists
     if (productIndex === -1) {
-      return `Product with ID ${id} not found.`;
+      return `Product with NAME: ${name} not found.`;
     }
   
     // Update the product by merging existing data with updateProductDto
@@ -50,13 +50,13 @@ export class ProductsService {
   }
   
 
-  remove(id: number) {
-    const productIndex = this.products.findIndex((product) => product.id === id);
+  remove(name: string) {
+    const productIndex = this.products.findIndex((product) => product.name === name);
     if (productIndex === -1) {
-      return `Product with ID ${id} not found.`;
+      return `Product with NAME: ${name} not found.`;
     }
     this.products.splice(productIndex, 1);
-    return `This action removes a #${id} product:
+    return `This action removes a #${name} product:
       ${JSON.stringify(this.products)}`;
   }
 }
