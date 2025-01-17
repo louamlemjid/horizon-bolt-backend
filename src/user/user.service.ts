@@ -4,42 +4,71 @@ import { UpdateUserDto } from './dto/update-user.dto';
 export type User = any;
 
 @Injectable()
+
 export class UserService {
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
-  }
-
-  findAll() {
-    return `This action returns all user`;
-  }
-
   private readonly users = [
     {
-      userId: 1,
-      username: 'john',
+      userName: "jay2",
+      email: 'john@gmail.com',
       password: 'changeme',
     },
     {
-      userId: 2,
-      username: 'maria',
+      userName: "MARIA1",
+      email: 'maria@gmail.com',
       password: 'guess',
     },
     {
-      userId: 3,
-      username: 'louam',
+      userName: "louam3",
+      email: 'louam@gmail.com',
       password: '123',
     },
   ];
+  async create(createUserDto: CreateUserDto): Promise <Object> {
 
-  async findOne(username: string): Promise<User | undefined> {
-    return this.users.find(user => user.username === username);
+   this.users.push(createUserDto);
+   return { createUserDto };
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  findAll() {
+    return this.users.map(user => {
+      const { password, ...result } = user;
+      return result;
+    })
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async findOne(userName: string): Promise<User | undefined> {
+    return this.users.find(user => user.userName === userName);
+  }
+
+  update(email: string, updateUserDto: UpdateUserDto) {
+    return `This action updates a #${email} user`;
+  }
+
+  remove(email: string) {
+    return `This action removes a #${email} user`;
+  }
+  addProduct()
+  {
+    return 'Product added successfully';
+  }
+  updateProduct()
+  {
+    return 'Product updated successfully';
+  }
+  deleteProduct()
+  {
+    return 'Product deleted successfully';
+  }
+  getProductsByUser()
+  {
+    return 'Products for retrieved successfully';
+  }
+  joinCourse()
+  {
+    return 'Course joined successfully';
+  }
+  buyProduct()
+  {
+    return 'Product bought successfully';
   }
 }
