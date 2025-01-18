@@ -5,5 +5,6 @@ export class CreateProductDto {
     isPaid: boolean;
     techKeywords?: string[];
     previewLink: string;
+    boltLink: string;
     designerId: number;
 }
