@@ -13,7 +13,7 @@ export class ProductsService {
     this.products.push(createProductDto);
 
     return `This action adds a new product:
-      ${JSON.stringify(createProductDto)}`;
+      ${JSON.stringify(this.products)}`;
   }
 
   findAll() {

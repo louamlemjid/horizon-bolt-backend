@@ -6,5 +6,5 @@ export class CreateProductDto {
     techKeywords?: string[];
     previewLink: string;
     boltLink: string;
-    designerId: number;
+    userNameOwner: string;
 }

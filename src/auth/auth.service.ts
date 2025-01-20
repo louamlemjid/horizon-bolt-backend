@@ -17,10 +17,11 @@ export class AuthService {
     createAuthDto: CreateAuthDto,
   ): Promise<{ access_token: string }> {
     const user = await this.userService.findOne(createAuthDto.email);
+    console.log(user);
     if (user?.password !== createAuthDto.password) {
       throw new UnauthorizedException();
     }
-    const payload = { sub: user.userId, email: user.email };
+    const payload = { sub: user.userId, userName: user.userName };
     return {
       access_token: await this.jwtService.signAsync(payload),
     };

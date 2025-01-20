@@ -1,11 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { CreateProductDto } from 'src/products/dto/create-product.dto';
+import { ProductsService } from 'src/products/products.service';
 export type User = any;
 
 @Injectable()
 
 export class UserService {
+  constructor (private productsService: ProductsService) {}
   private readonly users = [
     {
       userName: "jay2",
@@ -23,6 +26,12 @@ export class UserService {
       password: '123',
     },
   ];
+  async createProduct(req,createProductDto: CreateProductDto ) {
+    console.log("from service user: ",req.user);
+    createProductDto.userNameOwner = req.user.userName;
+    return this.productsService.create(createProductDto);
+  }
+
   async create(createUserDto: CreateUserDto): Promise <Object> {
 
    this.users.push(createUserDto);
@@ -36,8 +45,8 @@ export class UserService {
     })
   }
 
-  async findOne(userName: string): Promise<User | undefined> {
-    return this.users.find(user => user.userName === userName);
+  async findOne(email: string): Promise<User | undefined> {
+    return this.users.find(user => user.email === email);
   }
 
   update(email: string, updateUserDto: UpdateUserDto) {
