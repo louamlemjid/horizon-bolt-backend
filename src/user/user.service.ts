@@ -3,6 +3,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { CreateProductDto } from 'src/products/dto/create-product.dto';
 import { ProductsService } from 'src/products/products.service';
+import { UpdateProductDto } from 'src/products/dto/update-product.dto';
 export type User = any;
 
 @Injectable()
@@ -26,12 +27,15 @@ export class UserService {
       password: '123',
     },
   ];
-  async createProduct(req,createProductDto: CreateProductDto ) {
+  async createProduct(req:any,createProductDto: CreateProductDto ) {
     console.log("from service user: ",req.user);
     createProductDto.userNameOwner = req.user.userName;
     return this.productsService.create(createProductDto);
   }
-
+  async updateProduct(productId:number,req:any,updateProductDto:UpdateProductDto) {
+    console.log("from service user: ",req.user,updateProductDto);
+    return this.productsService.update(productId,req,updateProductDto);
+  }
   async create(createUserDto: CreateUserDto): Promise <Object> {
 
    this.users.push(createUserDto);
@@ -56,14 +60,7 @@ export class UserService {
   remove(email: string) {
     return `This action removes a #${email} user`;
   }
-  addProduct()
-  {
-    return 'Product added successfully';
-  }
-  updateProduct()
-  {
-    return 'Product updated successfully';
-  }
+  
   deleteProduct()
   {
     return 'Product deleted successfully';

@@ -5,11 +5,13 @@ import { UpdateProductDto } from './dto/update-product.dto';
 @Injectable()
 export class ProductsService {
   private readonly products = [
-    { name: 'Product 1', price: 100 },
-    { name: 'Product 2', price: 200 },
+    { id:1,name: 'Product 1', price: 100 },
+    { id:2,name: 'Product 2', price: 200 },
   ];
 
   create(createProductDto: CreateProductDto) {
+    const id = this.products.length + 1;
+    createProductDto.id = id;
     this.products.push(createProductDto);
 
     return `This action adds a new product:
@@ -27,26 +29,18 @@ export class ProductsService {
       ${product?JSON.stringify(product):'Product not found with NAME: '+name}`;
   }
 
-  update(name: string, updateProductDto: UpdateProductDto) {
+  update(productId: number,req:any, updateProductDto: UpdateProductDto) {
     // Find the index of the product with the given NAME:
-    const productIndex = this.products.findIndex((product) => product.name === name);
+    const productIndex = this.products.findIndex((product) => product.id === Number(productId));
   
     // Check if the product exists
     if (productIndex === -1) {
-      return `Product with NAME: ${name} not found.`;
+      return `Product with ID: ${productId} not found.`;
     }
-  
-    // Update the product by merging existing data with updateProductDto
-    const updatedProduct = {
-      ...this.products[productIndex], // Existing product data
-      ...updateProductDto,           // New data from the DTO
-    };
-  
-    // Save the updated product back to the products array
-    this.products[productIndex] = updatedProduct;
-  
+    updateProductDto?.name && (this.products[productIndex].name = updateProductDto.name);
+    
     // Return the updated product
-    return updatedProduct;
+    return this.products[productIndex];
   }
   
 
