@@ -1,12 +1,12 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable ,NotFoundException} from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 
 @Injectable()
 export class ProductsService {
   private readonly products = [
-    { id:1,name: 'Product 1', price: 100 },
-    { id:2,name: 'Product 2', price: 200 },
+    { id:1,name: 'Product 1', price: 100, previewLink: 'https://www.google.com', description: 'This is a product', boltLink: 'https://www.google.com', techKeywords: ['tech1'] },
+    { id:2,name: 'Product 2', price: 200, previewLink: 'https://www.google.com', description: 'This is a product', boltLink: 'https://www.google.com', techKeywords: ['tech1','tech2'] },
   ];
 
   create(createProductDto: CreateProductDto) {
@@ -14,43 +14,49 @@ export class ProductsService {
     createProductDto.id = id;
     this.products.push(createProductDto);
 
-    return `This action adds a new product:
-      ${JSON.stringify(this.products)}`;
+    return ;
   }
 
   findAll() {
-    return `This action returns all products:
-      ${JSON.stringify(this.products)}`;
+    return this.products;
   }
-
-  findOne(name: string) {
-    const product = this.products.find((product) => product.name === name);
-    return `This action returns a ${name} product:
-      ${product?JSON.stringify(product):'Product not found with NAME: '+name}`;
+  find(filter:any) {
+    let filterList=this.products;
+    filter?.name && (filterList=filterList.filter((product) => product.name === filter.name));
+    filter?.price && (filterList=filterList.filter((product) => product.price === Number(filter.price)));
+    filter?.description && (filterList=filterList.filter((product) => product.description.startsWith(filter.description)));
+    filter?.techKeywords && (filterList = filterList.filter((product) =>
+      product.techKeywords.some((keyword) => filter.techKeywords.includes(keyword))
+    ))
+    return filterList;
+  }
+  findOne(productId: number) {
+    const product = this.products.findIndex((product) => product.id === Number(productId));
+    if(product===-1){
+      throw new NotFoundException;
+    }
+    return product;
   }
 
   update(productId: number,req:any, updateProductDto: UpdateProductDto) {
     // Find the index of the product with the given NAME:
-    const productIndex = this.products.findIndex((product) => product.id === Number(productId));
-  
-    // Check if the product exists
-    if (productIndex === -1) {
-      return `Product with ID: ${productId} not found.`;
-    }
+    const productIndex =this.findOne(productId)
     updateProductDto?.name && (this.products[productIndex].name = updateProductDto.name);
-    
+    updateProductDto?.price && (this.products[productIndex].price = updateProductDto.price);
+    updateProductDto?.previewLink && (this.products[productIndex].previewLink = updateProductDto.previewLink);
+    updateProductDto?.description && (this.products[productIndex].description = updateProductDto.description);
+    updateProductDto?.boltLink && (this.products[productIndex].boltLink = updateProductDto.boltLink);
+    updateProductDto?.techKeywords && (this.products[productIndex].techKeywords = updateProductDto.techKeywords);
     // Return the updated product
     return this.products[productIndex];
   }
   
 
-  remove(name: string) {
-    const productIndex = this.products.findIndex((product) => product.name === name);
-    if (productIndex === -1) {
-      return `Product with NAME: ${name} not found.`;
-    }
+  remove(productId: number,req:any) {
+    const productIndex =this.findOne(productId)
+
     this.products.splice(productIndex, 1);
-    return `This action removes a #${name} product:
+    return `This action removes a #${productId} product:
       ${JSON.stringify(this.products)}`;
   }
 }

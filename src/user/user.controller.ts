@@ -16,9 +16,14 @@ export class UserController {
     return this.userService.createProduct(req,createProductDto);
   }
   @UseGuards(AuthGuard)
-  @Put('updateProduct/:productId')
+  @Patch(':productId')
   updateProduct(@Request() req:any,@Param('productId') productId:number ,@Query() updateProductDto: UpdateProductDto) {
     return this.userService.updateProduct(productId,req,updateProductDto);
+  }
+  @UseGuards(AuthGuard)
+  @Delete(':productId')
+  removeProduct(@Request() req:any,@Param('productId') productId:number ) {
+    return this.userService.removeProduct(productId,req);
   }
   @Get()
   findAll() {

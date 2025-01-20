@@ -4,7 +4,7 @@ export class CreateProductDto {
     description: string;
     price: number;
     isPaid: boolean;
-    techKeywords?: string[];
+    techKeywords: string[];
     previewLink: string;
     boltLink: string;
     userNameOwner: string;

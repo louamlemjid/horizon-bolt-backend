@@ -36,6 +36,11 @@ export class UserService {
     console.log("from service user: ",req.user,updateProductDto);
     return this.productsService.update(productId,req,updateProductDto);
   }
+  async removeProduct(req:any,productId:number) {
+  {
+    return this.productsService.remove(req,productId);
+  }
+}
   async create(createUserDto: CreateUserDto): Promise <Object> {
 
    this.users.push(createUserDto);
@@ -53,22 +58,6 @@ export class UserService {
     return this.users.find(user => user.email === email);
   }
 
-  update(email: string, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${email} user`;
-  }
-
-  remove(email: string) {
-    return `This action removes a #${email} user`;
-  }
-  
-  deleteProduct()
-  {
-    return 'Product deleted successfully';
-  }
-  getProductsByUser()
-  {
-    return 'Products for retrieved successfully';
-  }
   joinCourse()
   {
     return 'Course joined successfully';
@@ -77,4 +66,4 @@ export class UserService {
   {
     return 'Product bought successfully';
   }
-}
+  }
