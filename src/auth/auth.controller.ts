@@ -11,12 +11,12 @@ export class AuthController {
 
   @HttpCode(HttpStatus.OK)
   @Post('login')
-  signIn(@Body() createAuthDto: CreateAuthDto) {
-    return this.authService.signIn(createAuthDto);
+  signIn(@Body('email') email: string, @Body('password') password: string) {
+    return this.authService.signIn(email, password);
   }
   @Post('register')
-  signUp(@Body() createUserDto: CreateUserDto) {
-    return this.authService.signUp(createUserDto);
+  signUp(@Body('email') email: string, @Body('password') password: string) {
+    return this.authService.signUp(email, password);
   }
 
   @UseGuards(AuthGuard)

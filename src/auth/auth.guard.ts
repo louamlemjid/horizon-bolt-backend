@@ -1,35 +1,42 @@
 import { CanActivate, ExecutionContext, Injectable,UnauthorizedException } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { JwtService } from '@nestjs/jwt';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { jwtConstants } from './constants';
 import { Request } from 'express';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
+  private supabase:SupabaseClient;
+  constructor(private jwtService: JwtService) {
+    this.supabase = createClient(
+      process.env.SUPABASE_URL,
+      process.env.SUPABASE_API_KEY,
+    );
+  }
 
-  constructor(private jwtService: JwtService) {}
-
-  async canActivate(
-    context: ExecutionContext,
-  ): Promise<boolean> {
-    const request = context.switchToHttp().getRequest();
+  async canActivate(context: ExecutionContext): Promise<boolean> {
+    const request = context.switchToHttp().getRequest<Request>();
     const token = this.extractTokenFromHeader(request);
+
     if (!token) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException('Authorization token not found');
     }
+
     try {
-      const payload = await this.jwtService.verifyAsync(
-        token,
-        {
-          secret: jwtConstants.secret
-        }
-      );
-      // 💡 We're assigning the payload to the request object here
-      // so that we can access it in our route handlers
-      request['user'] = payload;
-    } catch {
-      throw new UnauthorizedException();
+      // Verify the token with Supabase
+      const { data, error } = await this.supabase.auth.getUser(token);
+
+      if (error || !data.user) {
+        throw new UnauthorizedException('Invalid token');
+      }
+
+      // Attach user data to the request object
+      request['user'] = data.user;
+    } catch (error) {
+      throw new UnauthorizedException('Invalid or expired token');
     }
+
     return true;
   }
 
