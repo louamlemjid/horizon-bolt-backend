@@ -49,7 +49,7 @@ export class UserService {
 
   findAll() {
     return this.users.map(user => {
-      const { password, ...result } = user;
+      const { password,email, ...result } = user;
       return result;
     })
   }
