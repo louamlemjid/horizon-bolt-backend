@@ -1,7 +1,6 @@
 export class CreateCourseDto {
-    title: string;
+    name: string;
     description: string;
     price: number;
     courseLink: string;
-    adminId: number;
 }

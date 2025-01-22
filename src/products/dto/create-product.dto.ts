@@ -1,5 +1,4 @@
 export class CreateProductDto {
-    id: number;
     name: string;
     description: string;
     price: number;
@@ -7,5 +6,5 @@ export class CreateProductDto {
     techKeywords: string[];
     previewLink: string;
     boltLink: string;
-    userNameOwner: string;
+    ownerId: string;
 }

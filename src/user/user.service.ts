@@ -29,7 +29,7 @@ export class UserService {
   ];
   async createProduct(req:any,createProductDto: CreateProductDto ) {
     console.log("from service user: ",req.user);
-    createProductDto.userNameOwner = req.user.userName;
+    createProductDto.ownerId = req.user.id;
     return this.productsService.create(createProductDto);
   }
   async updateProduct(productId:number,req:any,updateProductDto:UpdateProductDto) {

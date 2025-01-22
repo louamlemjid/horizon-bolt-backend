@@ -41,28 +41,64 @@ export class AuthService {
   //   return { message: 'User registered successfully', user };
   // }
 
-  async signUp(email: string, password: string) {
-    const { data, error } = await this.supabase.auth.signUp({ email, password });
-    if (error) throw new Error(error.message);
-    return data;
-  }
-  create(createAuthDto: CreateAuthDto) {
-    return 'This action adds a new auth';
-  }
+  async signUp(email: string, password: string, username?: string) {
+    // First, sign up with Supabase Auth
+    const { data: authData, error: authError } = await this.supabase.auth.signUp({ email, password });
 
-  findAll() {
-    return `This action returns all auth`;
-  }
+    if (authError) {
+      throw new Error(`Failed to sign up: ${authError.message}`);
+    }
 
-  findOne(id: number) {
-    return `This action returns a #${id} auth`;
-  }
+    // Now, create a new user record in the 'users' table
+    const { data: user, error: userError } = await this.supabase
+      .from('users')
+      .insert([
+        {
+          id: authData.user?.id, // Use the auth user ID
+          username: null,
+          joined_course: null, // Default to null
+          admin: false, // Default to false
+        },
+      ]);
 
-  update(id: number, updateAuthDto: UpdateAuthDto) {
-    return `This action updates a #${id} auth`;
-  }
+    if (userError) {
+      throw new Error(`Failed to create user record: ${userError.message}`);
+    }
 
-  remove(id: number) {
-    return `This action removes a #${id} auth`;
+    return {
+      message: 'User successfully signed up and created!',
+      user: user ? user[0] : null, // Return the user data
+    };
   }
+  //add username
+  async addUserName(userId: string,userName: string) {
+    // Ensure you're using Supabase admin privileges if needed
+    const { error } = await this.supabase
+    .from('users')
+    .update(
+    {
+      username: userName,
+    })
+    .eq('id', userId)
+    .select()
+  
+    if (error) {
+      throw new Error(error.message);
+    }
+  
+    return { message: 'Username added successfully' };
+  }
+  async changePassword(userId: string, newPassword: string) {
+    // Ensure you're using Supabase admin privileges if needed
+    const { error } = await this.supabase.auth.admin.updateUserById(userId, {
+      password: newPassword,
+    });
+  
+    if (error) {
+      throw new Error(error.message);
+    }
+  
+    return { message: 'Password updated successfully' };
+  }
+  
 }

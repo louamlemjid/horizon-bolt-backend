@@ -12,7 +12,7 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
   @UseGuards(AuthGuard)
   @Post()
-  createProduct(@Request() req,@Body() createProductDto: CreateProductDto) {
+  createProduct(@Request() req:any,@Body() createProductDto: CreateProductDto) {
     return this.userService.createProduct(req,createProductDto);
   }
   @UseGuards(AuthGuard)
